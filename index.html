@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG Secret Maps</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f1115; /* ปรับพื้นหลังให้มืดสไตล์ PUBG */
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #f3a913; /* สีเหลืองส้มสไตล์ PUBG */
+            text-shadow: 0 0 10px rgba(243, 169, 19, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .map-card {
+            background-color: #1a1d24;
+            border: 1px solid #2d323f;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .map-card:hover {
+            transform: translateY(-5px);
+            border-color: #f3a913; /* เปลี่ยนสีกรอบเวลาชี้ */
+        }
+
+        .map-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .map-info {
+            padding: 20px;
+            background: linear-gradient(to bottom, #1a1d24, #13161c);
+        }
+
+        .map-info h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.6rem;
+            color: #f3a913;
+        }
+
+        .map-info p {
+            margin: 0;
+            color: #9fa4b0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>PUBG Secret Maps Gallery</h1>
+
+    <div class="gallery-container">
+
+        <!-- Deston -->
+        <div class="map-card">
+            <img src="Deston.png" alt="Deston Secret Map">
+            <div class="map-info">
+                <h2>DESTON</h2>
+                <p>ตำแหน่งห้องลับ (Secret Room) และจุดใช้การ์ดกุญแจ (Security Keycard) บนแผนที่ Deston</p>
+            </div>
+        </div>
+
+        <!-- Erangel -->
+        <div class="map-card">
+            <img src="Erangle.png" alt="Erangel Secret Map">
+            <div class="map-info">
+                <h2>ERANGEL</h2>
+                <p>ตำแหน่งชั้นใต้ดินลับและจุดฟาร์มไอเทมสำคัญในแมพคลาสสิก Erangel</p>
+            </div>
+        </div>
+
+        <!-- Miramar -->
+        <div class="map-card">
+            <img src="Miramar.png" alt="Miramar Secret Map">
+            <div class="map-info">
+                <h2>MIRAMAR</h2>
+                <p>จุดซ่อนเร้น ห้องลับ และจุดเกิดของรถหรือไอเทมพิเศษบนทะเลทราย Miramar</p>
+            </div>
+        </div>
+
+        <!-- Paramo -->
+        <div class="map-card">
+            <img src="Paramo.png" alt="Paramo Secret Map">
+            <div class="map-info">
+                <h2>PARAMO</h2>
+                <p>ตำแหน่งห้องลับในแมพภูเขาไฟโหมดลึกลับ Paramo</p>
+            </div>
+        </div>
+
+        <!-- Rondo -->
+        <div class="map-card">
+            <img src="Rondo.png" alt="Rondo Secret Map">
+            <div class="map-info">
+                <h2>RONDO</h2>
+                <p>ตำแหน่งตู้เซฟและห้องเก็บของลับในสมรภูมิ Rondo</p>
+            </div>
+        </div>
+
+        <!-- Taego -->
+        <div class="map-card">
+            <img src="Taego.png" alt="Taego Secret Map">
+            <div class="map-info">
+                <h2>TAEGO</h2>
+                <p>ตำแหน่งห้องลับกระจายตามจุดต่างๆ ที่ต้องใช้กุญแจลับในการเปิดล็อกใน Taego</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
