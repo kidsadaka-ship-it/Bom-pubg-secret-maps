@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f1115; /* ปรับพื้นหลังให้มืดสไตล์ PUBG */
+            background-color: #0f1115; 
             color: #ffffff;
             margin: 0;
             padding: 20px;
@@ -18,7 +18,7 @@
 
         h1 {
             margin-bottom: 30px;
-            color: #f3a913; /* สีเหลืองส้มสไตล์ PUBG */
+            color: #f3a913; 
             text-shadow: 0 0 10px rgba(243, 169, 19, 0.3);
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -43,13 +43,20 @@
 
         .map-card:hover {
             transform: translateY(-5px);
-            border-color: #f3a913; /* เปลี่ยนสีกรอบเวลาชี้ */
+            border-color: #f3a913;
         }
 
+        /* เพิ่มสไตล์ให้รู้ว่ารูปนี้กดคลิกได้ */
         .map-card img {
             width: 100%;
             height: auto;
             display: block;
+            cursor: zoom-in; /* เปลี่ยนเมาส์เป็นรูปแว่นขยาย */
+            transition: opacity 0.2s;
+        }
+
+        .map-card img:hover {
+            opacity: 0.9;
         }
 
         .map-info {
@@ -68,6 +75,51 @@
             color: #9fa4b0;
             line-height: 1.6;
         }
+
+        /* --- สไตล์ของกล่องขยายรูปภาพ (Lightbox Overlay) --- */
+        .lightbox {
+            display: none; /* ซ่อนไว้ตอนแรก */
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* พื้นหลังดำโปร่งแสง */
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        .lightbox img {
+            max-width: 95%;
+            max-height: 95%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            border-radius: 4px;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        /* ปุ่มปิด X มุมขวาบน */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ffffff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #f3a913;
+        }
+
+        /* เอฟเฟกต์ตอนรูปค่อยๆ โผล่ขึ้นมา */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -78,7 +130,7 @@
 
         <!-- Deston -->
         <div class="map-card">
-            <img src="Deston.png" alt="Deston Secret Map">
+            <img src="Deston.png" alt="Deston Secret Map" onclick="openLightbox(this.src)">
             <div class="map-info">
                 <h2>DESTON</h2>
                 <p>ตำแหน่งห้องลับ (Secret Room) และจุดใช้การ์ดกุญแจ (Security Keycard) บนแผนที่ Deston</p>
@@ -87,7 +139,7 @@
 
         <!-- Erangel -->
         <div class="map-card">
-            <img src="Erangle.png" alt="Erangel Secret Map">
+            <img src="Erangle.png" alt="Erangel Secret Map" onclick="openLightbox(this.src)">
             <div class="map-info">
                 <h2>ERANGEL</h2>
                 <p>ตำแหน่งชั้นใต้ดินลับและจุดฟาร์มไอเทมสำคัญในแมพคลาสสิก Erangel</p>
@@ -96,7 +148,7 @@
 
         <!-- Miramar -->
         <div class="map-card">
-            <img src="Miramar.png" alt="Miramar Secret Map">
+            <img src="Miramar.png" alt="Miramar Secret Map" onclick="openLightbox(this.src)">
             <div class="map-info">
                 <h2>MIRAMAR</h2>
                 <p>จุดซ่อนเร้น ห้องลับ และจุดเกิดของรถหรือไอเทมพิเศษบนทะเลทราย Miramar</p>
@@ -105,7 +157,7 @@
 
         <!-- Paramo -->
         <div class="map-card">
-            <img src="Paramo.png" alt="Paramo Secret Map">
+            <img src="Paramo.png" alt="Paramo Secret Map" onclick="openLightbox(this.src)">
             <div class="map-info">
                 <h2>PARAMO</h2>
                 <p>ตำแหน่งห้องลับในแมพภูเขาไฟโหมดลึกลับ Paramo</p>
@@ -114,7 +166,7 @@
 
         <!-- Rondo -->
         <div class="map-card">
-            <img src="Rondo.png" alt="Rondo Secret Map">
+            <img src="Rondo.png" alt="Rondo Secret Map" onclick="openLightbox(this.src)">
             <div class="map-info">
                 <h2>RONDO</h2>
                 <p>ตำแหน่งตู้เซฟและห้องเก็บของลับในสมรภูมิ Rondo</p>
@@ -123,7 +175,7 @@
 
         <!-- Taego -->
         <div class="map-card">
-            <img src="Taego.png" alt="Taego Secret Map">
+            <img src="Taego.png" alt="Taego Secret Map" onclick="openLightbox(this.src)">
             <div class="map-info">
                 <h2>TAEGO</h2>
                 <p>ตำแหน่งห้องลับกระจายตามจุดต่างๆ ที่ต้องใช้กุญแจลับในการเปิดล็อกใน Taego</p>
@@ -131,6 +183,24 @@
         </div>
 
     </div>
+
+    <!-- กล่องซ่อนสำหรับแสดงภาพใหญ่ -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-btn">&times;</span>
+        <img id="lightbox-img" src="" alt="Enlarged Map">
+    </div>
+
+    <!-- ระบบ JavaScript สั้นๆ ควบคุมการเปิด-ปิด -->
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+    </script>
 
 </body>
 </html>
