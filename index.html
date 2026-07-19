@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUBG Secret Maps</title>
     <style>
+        /* สไตล์พื้นฐาน */
+        html {
+            scroll-behavior: smooth; /* ทำให้เวลากดปุ่มลัดแล้วหน้าจอเลื่อนแบบนุ่มนวล */
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0f1115; 
             color: #ffffff;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 0;
         }
 
-        /* --- เอฟเฟกต์ไฟวิ่งนีออนกะพริบที่หัวข้อ <h1> --- */
         h1 {
-            margin-bottom: 30px;
+            margin: 40px 0 20px 0;
             font-size: 2.5rem;
             text-transform: uppercase;
             letter-spacing: 3px;
             text-align: center;
             font-weight: 800;
             color: #fff;
-            /* อนิเมชันไฟวิ่งสลับสี */
             animation: neonGlow 3s ease-in-out infinite alternate;
         }
 
@@ -36,7 +36,7 @@
             }
             50% {
                 text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 10px #ff5500, 0 0 20px #ff5500, 0 0 25px #ff5500;
-                color: #ffcc00; /* ไฟวิ่งเปลี่ยนสีทอง */
+                color: #ffcc00;
             }
             100% {
                 text-shadow: 0 0 5px #fff, 0 0 15px #f3a913, 0 0 25px #f3a913, 0 0 35px #f3a913, 0 0 50px #f3a913;
@@ -44,12 +44,100 @@
             }
         }
 
+        /* --- จัดเลย์เอาต์แบ่ง หน้าเว็บ กับ Sidebar --- */
+        .main-wrapper {
+            display: flex;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 40px;
+        }
+
+        /* --- สไตล์กล่องข้อมูลด้านข้าง (Sidebar) --- */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0; /* ไม่ให้กล่องโดนบีบย่อขนาด */
+            position: sticky;
+            top: 25px; /* เลื่อนตามหน้าจอเวลา Scroll */
+            height: fit-content;
+        }
+
+        .sidebar-box {
+            background-color: #1a1d24;
+            border: 1px solid #2d323f;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .sidebar-box h3 {
+            margin: 0 0 15px 0;
+            color: #f3a913;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #2d323f;
+            padding-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* ปุ่มลัดเลือกแมพ */
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: #9fa4b0;
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #13161c;
+            border-left: 3px solid transparent;
+            border-radius: 0 6px 6px 0;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background-color: #232833;
+            border-left-color: #f3a913;
+            padding-left: 20px;
+        }
+
+        /* ปุ่มลิงก์ภายนอก */
+        .btn-link {
+            display: block;
+            text-align: center;
+            background-color: #f3a913;
+            color: #0f1115;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-link:hover {
+            background-color: #ffb72b;
+        }
+
+        .btn-secondary {
+            background-color: #2d323f;
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background-color: #3d4454;
+        }
+
+        /* --- พื้นที่แสดงรูปภาพแกลเลอรี --- */
         .gallery-container {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             gap: 40px;
-            max-width: 900px;
-            width: 100%;
         }
 
         .map-card {
@@ -59,6 +147,8 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             transition: transform 0.2s, border-color 0.2s;
+            /* เพิ่ม scroll-margin เพื่อเวลาคลิกลิงก์ลัด หัวข้อจะไม่โดนขอบจอทับ */
+            scroll-margin-top: 25px; 
         }
 
         .map-card:hover {
@@ -70,7 +160,7 @@
             width: 100%;
             height: auto;
             display: block;
-            cursor: pointer; /* เมาส์รูปมือปกติ คลิกดูรูปใหญ่ */
+            cursor: pointer;
             transition: opacity 0.2s;
         }
 
@@ -95,7 +185,7 @@
             line-height: 1.6;
         }
 
-        /* --- สไตล์หน้าต่างขยายรูปภาพแบบปกติ (ไม่มีซูม) --- */
+        /* --- หน้าต่างขยายรูปภาพ (Lightbox) --- */
         .lightbox {
             display: none;
             position: fixed;
@@ -107,7 +197,7 @@
             background-color: rgba(0, 0, 0, 0.9);
             justify-content: center;
             align-items: center;
-            cursor: pointer; /* คลิกตรงไหนก็ได้เพื่อปิด */
+            cursor: pointer;
         }
 
         .lightbox img {
@@ -134,71 +224,114 @@
             from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
+
+        /* --- รองรับหน้าจอมือถือ --- */
+        @media (max-width: 900px) {
+            .main-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            h1 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Jayt Secret Maps </h1>
+    <h1>Jayt PUBG Secret Maps</h1>
 
-    <div class="gallery-container">
+    <div class="main-wrapper">
 
-        <!-- Deston -->
-        <div class="map-card">
-            <img src="Deston.png" alt="Deston Secret Map" onclick="openLightbox(this.src)">
-            <div class="map-info">
-                <h2>DESTON</h2>
-                <p>ตำแหน่งห้องลับ (Secret Room) และจุดใช้การ์ดกุญแจ (Security Keycard) บนแผนที่ Deston</p>
+        <!-- แถบด้านข้าง (Sidebar) -->
+        <aside class="sidebar">
+            
+            <!-- บล็อกปุ่มลัด -->
+            <div class="sidebar-box">
+                <h3>📌 แผนที่ทั้งหมด</h3>
+                <div class="nav-links">
+                    <a href="#deston">DESTON</a>
+                    <a href="#erangel">ERANGEL</a>
+                    <a href="#miramar">MIRAMAR</a>
+                    <a href="#paramo">PARAMO</a>
+                    <a href="#rondo">RONDO</a>
+                    <a href="#taego">TAEGO</a>
+                </div>
             </div>
-        </div>
 
-        <!-- Erangel -->
-        <div class="map-card">
-            <img src="Erangle.png" alt="Erangel Secret Map" onclick="openLightbox(this.src)">
-            <div class="map-info">
-                <h2>ERANGEL</h2>
-                <p>ตำแหน่งชั้นใต้ดินลับและจุดฟาร์มไอเทมสำคัญในแมพคลาสสิก Erangel</p>
+            <!-- บล็อกข้อมูลเพิ่มเติม -->
+            <div class="sidebar-box">
+                <h3>🎮 คลังข้อมูลเกม</h3>
+                <a href="https://pubg.com" target="_blank" class="btn-link">เว็บไซต์หลัก PUBG</a>
+                <a href="https://status.pubg.com" target="_blank" class="btn-link btn-secondary">เช็กสถานะเซิร์ฟเวอร์</a>
             </div>
-        </div>
 
-        <!-- Miramar -->
-        <div class="map-card">
-            <img src="Miramar.png" alt="Miramar Secret Map" onclick="openLightbox(this.src)">
-            <div class="map-info">
-                <h2>MIRAMAR</h2>
-                <p>จุดซ่อนเร้น ห้องลับ และจุดเกิดของรถหรือไอเทมพิเศษบนทะเลทราย Miramar</p>
-            </div>
-        </div>
+        </aside>
 
-        <!-- Paramo -->
-        <div class="map-card">
-            <img src="Paramo.png" alt="Paramo Secret Map" onclick="openLightbox(this.src)">
-            <div class="map-info">
-                <h2>PARAMO</h2>
-                <p>ตำแหน่งห้องลับในแมพภูเขาไฟโหมดลึกลับ Paramo</p>
-            </div>
-        </div>
+        <!-- พื้นที่แสดงรูปแผนที่ -->
+        <main class="gallery-container">
 
-        <!-- Rondo -->
-        <div class="map-card">
-            <img src="Rondo.png" alt="Rondo Secret Map" onclick="openLightbox(this.src)">
-            <div class="map-info">
-                <h2>RONDO</h2>
-                <p>ตำแหน่งตู้เซฟและห้องเก็บของลับในสมรภูมิ Rondo</p>
+            <!-- Deston -->
+            <div class="map-card" id="deston">
+                <img src="Deston.png" alt="Deston Secret Map" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>DESTON</h2>
+                    <p>ตำแหน่งห้องลับ (Secret Room) และจุดใช้การ์ดกุญแจ (Security Keycard) บนแผนที่ Deston</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Taego -->
-        <div class="map-card">
-            <img src="Taego.png" alt="Taego Secret Map" onclick="openLightbox(this.src)">
-            <div class="map-info">
-                <h2>TAEGO</h2>
-                <p>ตำแหน่งห้องลับกระจายตามจุดต่างๆ ที่ต้องใช้กุญแจลับในการเปิดล็อกใน Taego</p>
+            <!-- Erangel -->
+            <div class="map-card" id="erangel">
+                <img src="Erangle.png" alt="Erangel Secret Map" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>ERANGEL</h2>
+                    <p>ตำแหน่งชั้นใต้ดินลับและจุดฟาร์มไอเทมสำคัญในแมพคลาสสิก Erangel</p>
+                </div>
             </div>
-        </div>
+
+            <!-- Miramar -->
+            <div class="map-card" id="miramar">
+                <img src="Miramar.png" alt="Miramar Secret Map" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>MIRAMAR</h2>
+                    <p>จุดซ่อนเร้น ห้องลับ และจุดเกิดของรถหรือไอเทมพิเศษบนทะเลทราย Miramar</p>
+                </div>
+            </div>
+
+            <!-- Paramo -->
+            <div class="map-card" id="paramo">
+                <img src="Paramo.png" alt="Paramo Secret Map" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>PARAMO</h2>
+                    <p>ตำแหน่งห้องลับในแมพภูเขาไฟโหมดลึกลับ Paramo</p>
+                </div>
+            </div>
+
+            <!-- Rondo -->
+            <div class="map-card" id="rondo">
+                <img src="Rondo.png" alt="Rondo Secret Map" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>RONDO</h2>
+                    <p>ตำแหน่งตู้เซฟและห้องเก็บของลับในสมรภูมิ Rondo</p>
+                </div>
+            </div>
+
+            <!-- Taego -->
+            <div class="map-card" id="taego">
+                <img src="Taego.png" alt="Taego Secret Map" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>TAEGO</h2>
+                    <p>ตำแหน่งห้องลับกระจายตามจุดต่างๆ ที่ต้องใช้กุญแจลับในการเปิดล็อกใน Taego</p>
+                </div>
+            </div>
+
+        </main>
 
     </div>
 
-    <!-- หน้าต่างขยายรูปภาพธรรมดา คลิกตรงไหนก็ปิดได้ -->
+    <!-- หน้าต่างขยายรูปภาพธรรมดา -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="close-btn">&times;</span>
         <img id="lightbox-img" src="" alt="Enlarged Map">
