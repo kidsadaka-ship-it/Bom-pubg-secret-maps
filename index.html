@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUBG Secret Maps</title>
+    <!-- เรียกใช้ไลบรารี Panzoom สำหรับระบบซูมและลากภาพ -->
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -46,12 +48,11 @@
             border-color: #f3a913;
         }
 
-        /* เพิ่มสไตล์ให้รู้ว่ารูปนี้กดคลิกได้ */
         .map-card img {
             width: 100%;
             height: auto;
             display: block;
-            cursor: zoom-in; /* เปลี่ยนเมาส์เป็นรูปแว่นขยาย */
+            cursor: zoom-in;
             transition: opacity 0.2s;
         }
 
@@ -76,30 +77,43 @@
             line-height: 1.6;
         }
 
-        /* --- สไตล์ของกล่องขยายรูปภาพ (Lightbox Overlay) --- */
+        /* --- สไตล์หน้าต่างขยายรูปภาพ --- */
         .lightbox {
-            display: none; /* ซ่อนไว้ตอนแรก */
+            display: none;
             position: fixed;
             z-index: 999;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9); /* พื้นหลังดำโปร่งแสง */
+            background-color: rgba(0, 0, 0, 0.95);
             justify-content: center;
             align-items: center;
-            cursor: zoom-out;
+            overflow: hidden; /* ป้องกันแถบสกรอลล์โผล่ตอนซูม */
+        }
+
+        /* ตัวครอบรูปภาพเพื่อให้ลากและซูมได้เสถียร */
+        .panzoom-parent {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .lightbox img {
-            max-width: 95%;
-            max-height: 95%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            max-width: 90%;
+            max-height: 90%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
             border-radius: 4px;
-            animation: fadeIn 0.2s ease-in-out;
+            cursor: grab; /* เปลี่ยนเมาส์เป็นรูปมือสำหรับลาก */
         }
 
-        /* ปุ่มปิด X มุมขวาบน */
+        .lightbox img:active {
+            cursor: grabbing; /* เปลี่ยนเป็นรูปมือกำตอนกำลังลาก */
+        }
+
+        /* ปุ่มปิด X */
         .close-btn {
             position: absolute;
             top: 20px;
@@ -108,6 +122,7 @@
             font-size: 40px;
             font-weight: bold;
             cursor: pointer;
+            z-index: 1000; /* ให้อยู่เหนือรูปเสมอ */
             transition: color 0.2s;
         }
 
@@ -115,10 +130,17 @@
             color: #f3a913;
         }
 
-        /* เอฟเฟกต์ตอนรูปค่อยๆ โผล่ขึ้นมา */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        /* คำแนะนำเล็กๆ บอกวิธีใช้งาน */
+        .zoom-tip {
+            position: absolute;
+            bottom: 20px;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+            z-index: 1000;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            pointer-events: none; /* เพื่อไม่ให้ขวางเมาส์ */
         }
     </style>
 </head>
@@ -184,21 +206,44 @@
 
     </div>
 
-    <!-- กล่องซ่อนสำหรับแสดงภาพใหญ่ -->
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="close-btn">&times;</span>
-        <img id="lightbox-img" src="" alt="Enlarged Map">
+    <!-- หน้าต่างขยายรูปภาพ -->
+    <div id="lightbox" class="lightbox">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <div class="panzoom-parent">
+            <img id="lightbox-img" src="" alt="Enlarged Map">
+        </div>
+        <div class="zoom-tip">💡 ใช้ลูกกลิ้งเมาส์เพื่อซูม และคลิกค้างเพื่อลากแผนที่</div>
     </div>
 
-    <!-- ระบบ JavaScript สั้นๆ ควบคุมการเปิด-ปิด -->
     <script>
+        let panzoomInstance = null;
+        const imgElement = document.getElementById('lightbox-img');
+
         function openLightbox(src) {
-            document.getElementById('lightbox-img').src = src;
+            imgElement.src = src;
             document.getElementById('lightbox').style.display = 'flex';
+            
+            // เปิดใช้งานระบบซูมและลากหลังจากภาพแสดงผลแล้ว
+            setTimeout(() => {
+                panzoomInstance = Panzoom(imgElement, {
+                    maxScale: 5, // ซูมเข้าได้สูงสุด 5 เท่าจากขนาดเดิม
+                    minScale: 1, // ซูมออกได้ต่ำสุดเท่าขนาดเริ่มต้น
+                    contain: 'outside' // ลากได้อิสระนอกกรอบเล็กน้อยเพื่อให้ดูขอบภาพได้
+                });
+
+                // เพิ่มระบบเปิดให้ใช้ Scroll Wheel ในการซูมเข้า-ออกได้
+                imgElement.parentElement.addEventListener('wheel', panzoomInstance.bindWithMousewheel);
+            }, 50);
         }
 
         function closeLightbox() {
             document.getElementById('lightbox').style.display = 'none';
+            // รีเซ็ตทำลายระบบซูมทิ้งเมื่อปิด เพื่อไม่ให้ตำแหน่งค้างตอนเปิดรูปถัดไป
+            if (panzoomInstance) {
+                panzoomInstance.destroy();
+                panzoomInstance = null;
+            }
+            imgElement.src = "";
         }
     </script>
 
