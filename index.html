@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUBG Secret Maps</title>
+    <title>PUBG Secret Maps - FIXED ZOOM</title>
     <!-- เรียกใช้ไลบรารี Panzoom สำหรับระบบซูมและลากภาพ -->
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
     <style>
@@ -77,7 +77,7 @@
             line-height: 1.6;
         }
 
-        /* --- สไตล์หน้าต่างขยายรูปภาพ --- */
+        /* --- ปรับปรุงสไตล์หน้าต่างขยายรูปภาพเพื่อให้อยู่ตรงกลาง --- */
         .lightbox {
             display: none;
             position: fixed;
@@ -87,30 +87,43 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.95);
+            /* บังคับให้ลูกอยู่ตรงกลางจอ */
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* ป้องกันแถบสกรอลล์โผล่ตอนซูม */
+            overflow: hidden; 
         }
 
         /* ตัวครอบรูปภาพเพื่อให้ลากและซูมได้เสถียร */
         .panzoom-parent {
-            width: 100%;
-            height: 100%;
+            /* ปรับขนาดให้เต็มจอ */
+            width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative; /* สำคัญสำหรับการจัดตำแหน่งลูก */
         }
 
         .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
+            /* ลบ max-width/height แบบเปอร์เซ็นต์ออก */
+            /* ปล่อยให้ขนาดเป็นอัตโนมัติเพื่อให้ JavaScript จัดการ */
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
             border-radius: 4px;
-            cursor: grab; /* เปลี่ยนเมาส์เป็นรูปมือสำหรับลาก */
+            cursor: grab; 
+            /* บังคับให้อยู่กึ่งกลางในกรอบพ่อ */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* กำหนดขีดจำกัดขนาดภาพเริ่มต้นเพื่อไม่ให้ใหญ่เกินจอเกินไป */
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
         }
 
         .lightbox img:active {
-            cursor: grabbing; /* เปลี่ยนเป็นรูปมือกำตอนกำลังลาก */
+            cursor: grabbing; 
         }
 
         /* ปุ่มปิด X */
@@ -122,7 +135,7 @@
             font-size: 40px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 1000; /* ให้อยู่เหนือรูปเสมอ */
+            z-index: 1000; 
             transition: color 0.2s;
         }
 
@@ -130,7 +143,7 @@
             color: #f3a913;
         }
 
-        /* คำแนะนำเล็กๆ บอกวิธีใช้งาน */
+        /* คำแนะนำ */
         .zoom-tip {
             position: absolute;
             bottom: 20px;
@@ -140,13 +153,15 @@
             background: rgba(0,0,0,0.6);
             padding: 8px 16px;
             border-radius: 20px;
-            pointer-events: none; /* เพื่อไม่ให้ขวางเมาส์ */
+            pointer-events: none; 
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
 <body>
 
-    <h1>Jayt PUBG Secret Maps</h1>
+    <h1>Jaty Secret Maps Gallery</h1>
 
     <div class="gallery-container">
 
@@ -218,32 +233,51 @@
     <script>
         let panzoomInstance = null;
         const imgElement = document.getElementById('lightbox-img');
+        const panzoomParent = imgElement.parentElement;
 
         function openLightbox(src) {
             imgElement.src = src;
             document.getElementById('lightbox').style.display = 'flex';
             
-            // เปิดใช้งานระบบซูมและลากหลังจากภาพแสดงผลแล้ว
-            setTimeout(() => {
+            // ยกเลิกฟังก์ชันซูมที่มีอยู่ก่อนหน้านี้เพื่อความเสถียร
+            if (panzoomInstance) {
+                panzoomInstance.destroy();
+                panzoomInstance = null;
+            }
+
+            // --- แก้ไขสำคัญ: รอให้รูปภาพโหลดเสร็จก่อน ---
+            imgElement.onload = () => {
+                // บังคับให้จัดตำแหน่งกึ่งกลางใหม่หลังจากภาพโหลดเสร็จ
+                imgElement.style.transform = 'translate(-50%, -50%) scale(1)';
+                
+                // เปิดใช้งานระบบซูมและลาก
                 panzoomInstance = Panzoom(imgElement, {
-                    maxScale: 5, // ซูมเข้าได้สูงสุด 5 เท่าจากขนาดเดิม
-                    minScale: 1, // ซูมออกได้ต่ำสุดเท่าขนาดเริ่มต้น
-                    contain: 'outside' // ลากได้อิสระนอกกรอบเล็กน้อยเพื่อให้ดูขอบภาพได้
+                    maxScale: 6, // ซูมเข้าได้สูงสุด 6 เท่า
+                    minScale: 0.8, // ซูมออกได้ต่ำสุด
+                    contain: 'outside', 
+                    // สำคัญมากสำหรับการจัดตำแหน่งกึ่งกลางตอนเริ่ม
+                    setTransform: (elem, { x, y, scale }) => {
+                        elem.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+                    }
                 });
 
                 // เพิ่มระบบเปิดให้ใช้ Scroll Wheel ในการซูมเข้า-ออกได้
-                imgElement.parentElement.addEventListener('wheel', panzoomInstance.bindWithMousewheel);
-            }, 50);
+                panzoomParent.addEventListener('wheel', panzoomInstance.bindWithMousewheel);
+            };
         }
 
         function closeLightbox() {
             document.getElementById('lightbox').style.display = 'none';
             // รีเซ็ตทำลายระบบซูมทิ้งเมื่อปิด เพื่อไม่ให้ตำแหน่งค้างตอนเปิดรูปถัดไป
             if (panzoomInstance) {
+                // ยกเลิก event listener ของ wheel ก่อน
+                panzoomParent.removeEventListener('wheel', panzoomInstance.bindWithMousewheel);
                 panzoomInstance.destroy();
                 panzoomInstance = null;
             }
             imgElement.src = "";
+            // ล้างฟังก์ชัน onload ทิ้ง
+            imgElement.onload = null; 
         }
     </script>
 
