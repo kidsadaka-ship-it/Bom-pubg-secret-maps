@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUBG Secret Maps</title>
+    <title>PUBG Secret Maps & Tools</title>
     <style>
-        /* สไตล์พื้นฐาน */
         html {
-            scroll-behavior: smooth; /* ทำให้เวลากดปุ่มลัดแล้วหน้าจอเลื่อนแบบนุ่มนวล */
+            scroll-behavior: smooth; 
         }
         
         body {
@@ -44,7 +43,6 @@
             }
         }
 
-        /* --- จัดเลย์เอาต์แบ่ง หน้าเว็บ กับ Sidebar --- */
         .main-wrapper {
             display: flex;
             max-width: 1300px;
@@ -53,12 +51,12 @@
             gap: 40px;
         }
 
-        /* --- สไตล์กล่องข้อมูลด้านข้าง (Sidebar) --- */
+        /* Sidebar กล่องด้านข้าง */
         .sidebar {
             width: 280px;
-            flex-shrink: 0; /* ไม่ให้กล่องโดนบีบย่อขนาด */
+            flex-shrink: 0; 
             position: sticky;
-            top: 25px; /* เลื่อนตามหน้าจอเวลา Scroll */
+            top: 25px; 
             height: fit-content;
         }
 
@@ -81,7 +79,6 @@
             letter-spacing: 1px;
         }
 
-        /* ปุ่มลัดเลือกแมพ */
         .nav-links {
             display: flex;
             flex-direction: column;
@@ -132,7 +129,7 @@
             background-color: #3d4454;
         }
 
-        /* --- พื้นที่แสดงรูปภาพแกลเลอรี --- */
+        /* พื้นที่แกลเลอรี */
         .gallery-container {
             flex-grow: 1;
             display: flex;
@@ -147,7 +144,6 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             transition: transform 0.2s, border-color 0.2s;
-            /* เพิ่ม scroll-margin เพื่อเวลาคลิกลิงก์ลัด หัวข้อจะไม่โดนขอบจอทับ */
             scroll-margin-top: 25px; 
         }
 
@@ -185,7 +181,7 @@
             line-height: 1.6;
         }
 
-        /* --- หน้าต่างขยายรูปภาพ (Lightbox) --- */
+        /* หน้าต่างขยายรูปภาพ (Lightbox) */
         .lightbox {
             display: none;
             position: fixed;
@@ -225,7 +221,6 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* --- รองรับหน้าจอมือถือ --- */
         @media (max-width: 900px) {
             .main-wrapper {
                 flex-direction: column;
@@ -248,9 +243,9 @@
         <!-- แถบด้านข้าง (Sidebar) -->
         <aside class="sidebar">
             
-            <!-- บล็อกปุ่มลัด -->
+            <!-- เมนูปุ่มลัดเลือกแมพและอาวุธ -->
             <div class="sidebar-box">
-                <h3>📌 แผนที่ทั้งหมด</h3>
+                <h3>📌 เมนูปุ่มลัด</h3>
                 <div class="nav-links">
                     <a href="#deston">DESTON</a>
                     <a href="#erangel">ERANGEL</a>
@@ -258,12 +253,21 @@
                     <a href="#paramo">PARAMO</a>
                     <a href="#rondo">RONDO</a>
                     <a href="#taego">TAEGO</a>
+                    <a href="#mortar">MORTAR</a> <!-- เพิ่มปุ่มลัด Mortar -->
                 </div>
+            </div>
+
+            <!-- กล่องข้อมูลคลังเกม (แก้ไขลิงก์ใหม่แล้ว) -->
+            <div class="sidebar-box">
+                <h3>🎮 คลังข้อมูลเกม</h3>
+                <!-- ลิงก์ตรงไปยังเว็บ PUBG.plus แผนที่ -->
+                <a href="https://pubg.plus/en/map" target="_blank" class="btn-link">ดูแผนที่ละเอียด PUBG.PLUS</a>
+                <a href="https://status.pubg.com" target="_blank" class="btn-link btn-secondary">เช็กสถานะเซิร์ฟเวอร์</a>
             </div>
 
         </aside>
 
-        <!-- พื้นที่แสดงรูปแผนที่ -->
+        <!-- พื้นที่แสดงรูปภาพ -->
         <main class="gallery-container">
 
             <!-- Deston -->
@@ -320,6 +324,15 @@
                 </div>
             </div>
 
+            <!-- Mortar (เพิ่มใหม่) -->
+            <div class="map-card" id="mortar">
+                <img src="Mortar.png" alt="PUBG Mortar" onclick="openLightbox(this.src)">
+                <div class="map-info">
+                    <h2>MORTAR</h2>
+                    <p>เครื่องยิงลูกระเบิดและระยะการคำนวณวิถีกระสุนสำหรับซัพพอร์ตทีมจากระยะไกล</p>
+                </div>
+            </div>
+
         </main>
 
     </div>
@@ -327,7 +340,7 @@
     <!-- หน้าต่างขยายรูปภาพธรรมดา -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="close-btn">&times;</span>
-        <img id="lightbox-img" src="" alt="Enlarged Map">
+        <img id="lightbox-img" src="" alt="Enlarged Image">
     </div>
 
     <script>
